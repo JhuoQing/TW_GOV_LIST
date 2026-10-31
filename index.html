@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台灣政府人事派系圖鑑</title>
+<meta name="description" content="中央政務官員、國營與公股董事長、地方縣市首長的政黨與派系背景互動圖鑑。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23b8432f'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='serif'>政</text></svg>">
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">Who Governs Taiwan · 人事與派系</p>
+    <h1>台灣政府人事<span>派系圖鑑</span></h1>
+    <p class="lede">中央內閣、國營與公股事業、地方縣市首長，一共 <b id="stat-total">—</b> 位關鍵人物的政黨歸屬、派系淵源與彼此關係。</p>
+    <dl class="stats" id="stats"></dl>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="檢視方式">
+  <div class="wrap">
+    <button class="tab is-active" data-view="cards" aria-selected="true">人物圖鑑</button>
+    <button class="tab" data-view="graph" aria-selected="false">派系星圖</button>
+    <button class="tab" data-view="about" aria-selected="false">關於資料</button>
+  </div>
+</nav>
+
+<main>
+  <!-- 人物圖鑑 -->
+  <section class="view is-active" id="view-cards">
+    <div class="wrap">
+      <div class="toolbar">
+        <label class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="搜尋姓名、機關、派系或經歷…" autocomplete="off">
+        </label>
+        <div class="filter-row">
+          <div class="chips" id="f-category" role="group" aria-label="類別"></div>
+          <div class="chips" id="f-party" role="group" aria-label="政黨"></div>
+        </div>
+        <div class="filter-row">
+          <label class="select">派系／背景
+            <select id="f-cluster"><option value="">全部</option></select>
+          </label>
+          <label class="select">排序
+            <select id="sort">
+              <option value="default">依原始順序</option>
+              <option value="party">依政黨</option>
+              <option value="cluster">依派系</option>
+              <option value="name">依姓名筆畫</option>
+            </select>
+          </label>
+          <p class="count" id="count" aria-live="polite"></p>
+        </div>
+      </div>
+      <div id="grid" class="grid"></div>
+      <p class="empty" id="empty" hidden>沒有符合條件的人物。<button class="linkish" id="reset">清除篩選</button></p>
+    </div>
+  </section>
+
+  <!-- 派系星圖 -->
+  <section class="view" id="view-graph">
+    <div class="graph-shell">
+      <svg id="graph" role="img" aria-label="人物與派系關係網絡圖"></svg>
+      <div class="graph-ui">
+        <div class="legend" id="legend"></div>
+        <div class="chips small" id="g-category"></div>
+        <p class="hint">拖曳平移・滾輪或雙指縮放・點選人物看詳情・點選派系名稱聚焦</p>
+      </div>
+      <button class="graph-reset" id="graph-reset">重設視角</button>
+    </div>
+  </section>
+
+  <!-- 關於 -->
+  <section class="view" id="view-about">
+    <div class="wrap prose">
+      <h2>關於這份資料</h2>
+      <p>本站整理三類職位：<b>中央政務官員</b>（總統府、國安會、行政院及各部會首長）、<b>國營與公股事業董事長</b>，以及 <b>地方縣市首長</b>。每位人物附有政黨、派系或政治背景，以及淵源說明。</p>
+      <h3>派系星圖怎麼讀</h3>
+      <ul>
+        <li>圓點是人物，顏色代表政黨；文字標籤是派系或背景群組。</li>
+        <li>實線表示核心成員，虛線表示「友好」或「淵源」等較弱的連結。</li>
+        <li>朱紅色線條是名單內人物之間的直接淵源，例如接班或同一市府團隊。</li>
+      </ul>
+      <h3>請注意</h3>
+      <ul>
+        <li><b>派系歸屬屬於詮釋性描述</b>，並非當事人或政黨的官方認定。星圖中的群組是依說明文字整理的歸類，可能有不同觀點。</li>
+        <li><b>人事會異動。</b>部會首長改組、公股董事長更替與地方選舉都會讓名單過時，引用前請以官方資訊核對。</li>
+        <li>各政黨在視覺上採同等飽和度的配色，不代表任何立場。</li>
+      </ul>
+      <p class="muted">原始資料：<a href="data/roc_government_factions.csv">roc_government_factions.csv</a>；網站使用的結構化資料：<a href="data/people.json">people.json</a>。</p>
+    </div>
+  </section>
+</main>
+
+<!-- 人物詳情 -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="d-name" role="dialog">
+  <button class="close" id="d-close" aria-label="關閉">×</button>
+  <div class="drawer-body" id="d-body"></div>
+</aside>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>派系與背景歸屬為整理者之描述，非官方認定；人事資料可能已有異動。</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
