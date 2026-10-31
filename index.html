@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>台灣政府人事派系圖鑑</title>
-<meta name="description" content="中央政務官員、國營與公股董事長、地方縣市首長的政黨與派系背景互動圖鑑。">
+<meta name="description" content="中央政務官員、國營與公股董事長、地方縣市首長的政黨與派系背景互動圖鑑：人物圖鑑、派系星圖、縣市地圖、數據觀察與派系導讀。">
+<meta property="og:title" content="台灣政府人事派系圖鑑">
+<meta property="og:description" content="誰在治理台灣？75 位關鍵人物的政黨、派系與彼此關係。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
@@ -21,10 +23,42 @@
   </div>
 </header>
 
+<section class="primer">
+  <div class="wrap">
+    <div class="primer-head">
+      <h2>閱讀這份名單</h2>
+      <p>一個政府的樣貌，不只寫在政策白皮書裡，也寫在人事名單上。誰坐上哪個位子、從哪裡來、和誰屬於同一條人脈，往往比口號更能說明權力如何運作。這份圖鑑把三種性質不同的職位放在一起，讓你可以從同一個視角，看見中央、國營事業與地方之間的連結。</p>
+    </div>
+    <div class="primer-cols">
+      <article>
+        <span class="num">01</span>
+        <h3>中央政務官員</h3>
+        <p>總統府、國安會與行政院各部會的首長，是政策決策與執行的核心。從這裡可以看到執政黨內各派系如何分配要職，也可以看到不少無黨籍的專業官僚與跨界延攬人士。政務官隨政府進退，名單也最常因內閣改組而變動。</p>
+        <button class="linkish" data-goto="cards" data-cat="中央政務官員">瀏覽中央政務官員 →</button>
+      </article>
+      <article>
+        <span class="num">02</span>
+        <h3>國營與公股董事長</h3>
+        <p>台電、中油、中鋼、中華電信與公股銀行等事業的董事長，由政府以主管機關或股東身分推派。這些職位需要產業與金融專業，也常是外界檢視政治任命的焦點。名單中多數是內部升任或專業經理人，少數具有明確的政黨或派系淵源。</p>
+        <button class="linkish" data-goto="cards" data-cat="國營與公股董事長">瀏覽國營與公股董事長 →</button>
+      </article>
+      <article>
+        <span class="num">03</span>
+        <h3>地方縣市首長</h3>
+        <p>22 位直選的縣市長，是 2022 年地方選舉的結果。地方政治常由家族、農會、水利會與宗親網絡主導，政黨標籤只是故事的一部分。2026 年 11 月 28 日的地方選舉將產生新一屆首長，這一區的名單也會隨之更新。</p>
+        <button class="linkish" data-goto="map">打開縣市地圖 →</button>
+      </article>
+    </div>
+  </div>
+</section>
+
 <nav class="tabs" aria-label="檢視方式">
   <div class="wrap">
     <button class="tab is-active" data-view="cards" aria-selected="true">人物圖鑑</button>
     <button class="tab" data-view="graph" aria-selected="false">派系星圖</button>
+    <button class="tab" data-view="map" aria-selected="false">縣市地圖</button>
+    <button class="tab" data-view="insights" aria-selected="false">數據觀察</button>
+    <button class="tab" data-view="factions" aria-selected="false">派系導讀</button>
     <button class="tab" data-view="about" aria-selected="false">關於資料</button>
   </div>
 </nav>
@@ -36,7 +70,7 @@
       <div class="toolbar">
         <label class="search">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="q" type="search" placeholder="搜尋姓名、機關、派系或經歷…" autocomplete="off">
+          <input id="q" type="search" placeholder="搜尋姓名、機關、派系或經歷…（按 / 快速搜尋）" autocomplete="off">
         </label>
         <div class="filter-row">
           <div class="chips" id="f-category" role="group" aria-label="類別"></div>
@@ -54,6 +88,7 @@
               <option value="name">依姓名筆畫</option>
             </select>
           </label>
+          <button class="linkish small" id="random">隨機翻一位</button>
           <p class="count" id="count" aria-live="polite"></p>
         </div>
       </div>
@@ -75,34 +110,134 @@
     </div>
   </section>
 
+  <!-- 縣市地圖 -->
+  <section class="view" id="view-map">
+    <div class="wrap map-layout">
+      <div class="map-text">
+        <p class="kicker">22 縣市・2022 年地方選舉結果</p>
+        <h2>地方版圖</h2>
+        <p>每一格代表一個縣市，位置大致對應地理方位，離島放在左側。顏色是現任首長的政黨，點選任何一格可以看首長的派系背景。</p>
+        <div class="map-mode chips" id="map-mode">
+          <button class="chip" data-v="party" aria-pressed="true">依政黨</button>
+          <button class="chip" data-v="local" aria-pressed="false">標示地方派系</button>
+        </div>
+        <div id="map-summary" class="map-summary"></div>
+        <p class="note">2026 年 11 月 28 日將舉行地方選舉，新任首長於 12 月 25 日就職，屆時本頁會更新。</p>
+      </div>
+      <div class="tilemap" id="tilemap" role="list" aria-label="縣市格狀地圖"></div>
+    </div>
+  </section>
+
+  <!-- 數據觀察 -->
+  <section class="view" id="view-insights">
+    <div class="wrap insights">
+      <p class="kicker">數據觀察</p>
+      <h2>從數字看人事結構</h2>
+      <p class="intro">以下數字全部由本站資料即時計算。標示「待確認」的人物在政黨統計中歸入「無黨籍及其他」。</p>
+      <div class="heroes" id="heroes"></div>
+      <figure class="chart-block">
+        <figcaption><h3>三類職位的政黨組成</h3><p>每一列是一類職位，長度代表人數。</p></figcaption>
+        <div id="chart-party" class="chart"></div>
+        <p class="obs" id="obs-party"></p>
+      </figure>
+      <figure class="chart-block">
+        <figcaption><h3>各派系與背景群組人數</h3><p>只計「核心成員」；友好或淵源關係以淺色延伸表示。</p></figcaption>
+        <div id="chart-cluster" class="chart"></div>
+        <p class="obs" id="obs-cluster"></p>
+      </figure>
+      <details class="table-view">
+        <summary>以表格檢視數據</summary>
+        <div id="tables"></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 派系導讀 -->
+  <section class="view" id="view-factions">
+    <div class="wrap factions">
+      <div class="prose">
+        <p class="kicker">派系導讀</p>
+        <h2>「派系」是什麼？</h2>
+        <p>在台灣政治中，「派系」可以指兩種很不一樣的東西。</p>
+        <p><b>第一種是政黨內部的派系。</b>例如民進黨的新潮流、英系、正國會，它們是黨內的政治聯盟，在黨職選舉、公職提名與政府人事上互相競爭也互相合作。民進黨曾在 2006 年通過解散派系的決議，但各派系的人脈與運作至今仍普遍存在，媒體與政治觀察者也持續以派系來分析人事布局。</p>
+        <p><b>第二種是地方派系。</b>它們以家族、農會、水利會、信用合作社與宗親會為基礎，長期主導縣市層級的選舉與資源分配。地方派系和政黨的關係較為鬆散，同一個派系在不同時期可能和不同政黨合作。</p>
+        <p>本站另外加上「專業體系」一類，用來呈現政府中大量不屬於任何派系的成員：常任文官、公股事業內部升任者，以及從產學界延攬的專業人士。</p>
+        <p class="caution">派系歸屬沒有官方名冊，多半來自媒體報導與政治觀察。本站的歸類是一種詮釋，可能與當事人的自我認知不同。</p>
+      </div>
+      <nav class="faction-index" id="faction-index" aria-label="派系目錄"></nav>
+      <div id="faction-list"></div>
+    </div>
+  </section>
+
   <!-- 關於 -->
   <section class="view" id="view-about">
     <div class="wrap prose">
       <h2>關於這份資料</h2>
-      <p>本站整理三類職位：<b>中央政務官員</b>（總統府、國安會、行政院及各部會首長）、<b>國營與公股事業董事長</b>，以及 <b>地方縣市首長</b>。每位人物附有政黨、派系或政治背景，以及淵源說明。</p>
-      <h3>派系星圖怎麼讀</h3>
+      <p>本站整理三類職位：<b>中央政務官員</b>（總統府、國安會、行政院及各部會首長）、<b>國營與公股事業董事長</b>，以及 <b>地方縣市首長</b>。每位人物附有政黨、派系或政治背景、淵源說明，以及該職位的職掌介紹。資料最後更新：<b id="updated">—</b>。</p>
+
+      <h3>各分頁怎麼用</h3>
       <ul>
-        <li>圓點是人物，顏色代表政黨；文字標籤是派系或背景群組。</li>
-        <li>實線表示核心成員，虛線表示「友好」或「淵源」等較弱的連結。</li>
-        <li>朱紅色線條是名單內人物之間的直接淵源，例如接班或同一市府團隊。</li>
+        <li><b>人物圖鑑</b>：依類別、政黨、派系篩選或搜尋。點開人物可以看完整背景、職位說明與相關人物，也可以加入比較（最多三人）。</li>
+        <li><b>派系星圖</b>：圓點是人物，顏色代表政黨；文字標籤是派系或背景群組。實線表示核心成員，虛線表示友好或淵源，朱紅色線是名單內人物之間的直接淵源，例如接班或同一市府團隊。</li>
+        <li><b>縣市地圖</b>：以格狀地圖呈現 22 縣市首長的政黨與地方派系。</li>
+        <li><b>數據觀察</b>：由資料即時計算的統計與觀察。</li>
+        <li><b>派系導讀</b>：每個派系或背景群組的介紹與成員名單。</li>
       </ul>
+
+      <h3>歸類方法</h3>
+      <p>每位人物可以屬於一個或多個群組，並分為兩種強度：「核心成員」代表資料說明中明確歸屬於該派系；「友好／淵源」代表資料說明中提到友好、出身或地緣關係。人物之間的直接連線只在說明文字明確指出兩人關係時才建立。所有歸類集中在原始碼的 <code>scripts/build_data.py</code>，公開可檢視。</p>
+
+      <h3>近期更新</h3>
+      <ul>
+        <li>2026-11-01：依 2025 年 8 月內閣改組更新衛福部、經濟部、數位發展部、國發會與行政院秘書長；新增運動部部長；新竹市長高虹安已於 2025 年 12 月復職。</li>
+        <li>部分新任首長的政黨與派系背景尚待查證，於網站上以「待確認」標示。</li>
+      </ul>
+
       <h3>請注意</h3>
       <ul>
-        <li><b>派系歸屬屬於詮釋性描述</b>，並非當事人或政黨的官方認定。星圖中的群組是依說明文字整理的歸類，可能有不同觀點。</li>
+        <li><b>派系歸屬屬於詮釋性描述</b>，並非當事人或政黨的官方認定。</li>
         <li><b>人事會異動。</b>部會首長改組、公股董事長更替與地方選舉都會讓名單過時，引用前請以官方資訊核對。</li>
-        <li>各政黨在視覺上採同等飽和度的配色，不代表任何立場。</li>
+        <li>各政黨在視覺上採同等飽和度的配色，配色已檢查色盲可辨識度，不代表任何立場。</li>
       </ul>
-      <p class="muted">原始資料：<a href="data/roc_government_factions.csv">roc_government_factions.csv</a>；網站使用的結構化資料：<a href="data/people.json">people.json</a>。</p>
+
+      <h3>發現錯誤？</h3>
+      <p>歡迎到 <a href="https://github.com/JhuoQing/TW_GOV_LIST/issues" target="_blank" rel="noopener">GitHub Issues</a> 回報錯誤或提供更正來源，我們會盡快核對更新。</p>
+      <p class="muted">原始資料：<a href="data/roc_government_factions.csv">roc_government_factions.csv</a>；網站使用的結構化資料：<a href="data/people.json">people.json</a>；完整變更紀錄：<a href="https://github.com/JhuoQing/TW_GOV_LIST/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a>。</p>
     </div>
   </section>
 </main>
 
+<!-- 比較列 -->
+<div class="compare-tray" id="tray" hidden>
+  <div class="wrap tray-inner">
+    <span class="tray-label">比較</span>
+    <div class="tray-items" id="tray-items"></div>
+    <button class="btn solid" id="tray-go">開始比較</button>
+    <button class="linkish small" id="tray-clear">清除</button>
+  </div>
+</div>
+
+<!-- 比較視窗 -->
+<div class="compare" id="compare" hidden role="dialog" aria-label="人物比較">
+  <div class="compare-inner">
+    <button class="close" id="cmp-close" aria-label="關閉">×</button>
+    <div id="cmp-body"></div>
+  </div>
+</div>
+
 <!-- 人物詳情 -->
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="d-name" role="dialog">
-  <button class="close" id="d-close" aria-label="關閉">×</button>
+  <div class="drawer-bar">
+    <button class="icon-btn" id="d-prev" aria-label="上一位">‹</button>
+    <button class="icon-btn" id="d-next" aria-label="下一位">›</button>
+    <span class="bar-pos" id="d-pos"></span>
+    <button class="icon-btn" id="d-close" aria-label="關閉">×</button>
+  </div>
   <div class="drawer-body" id="d-body"></div>
 </aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer class="foot">
   <div class="wrap">

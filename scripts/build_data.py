@@ -8,6 +8,8 @@ import csv
 import json
 from pathlib import Path
 
+from content import CLUSTER_DESC, org_desc
+
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "data" / "roc_government_factions.csv"
 OUT = ROOT / "data" / "people.json"
@@ -113,6 +115,8 @@ def main():
             "faction": r["所屬派系或政治背景"].strip(),
             "bio": r["派系淵源與背景說明"].strip(),
             "clusters": [{"id": c, "w": w} for c, w in MEMBERS[name]],
+            "orgDesc": org_desc(r["機關或機構"].strip(), r["類別"].strip()),
+            "pending": "待確認" in (r["所屬政黨"] + r["姓名"]),
         })
 
     by_name = {p["name"]: p["id"] for p in people}
@@ -122,7 +126,8 @@ def main():
         raise SystemExit(f"MEMBERS 中有 CSV 不存在的人：{missing}")
 
     OUT.write_text(json.dumps(
-        {"clusters": CLUSTERS, "people": people, "edges": edges},
+        {"clusters": {k: {**v, "desc": CLUSTER_DESC.get(k, "")} for k, v in CLUSTERS.items()},
+         "people": people, "edges": edges, "updated": "2026-11-01"},
         ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"寫入 {len(people)} 人、{len(edges)} 條關聯 → {OUT.relative_to(ROOT)}")
 
